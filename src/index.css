@@ -1,0 +1,28 @@
+/*
+Copyright© 2022 Gesellschaft zur Förderung der angewandten Forschung e.V. acting on behalf of its Fraunhofer Institut für Graphische Datenverarbeitung.
+Licensed under the EUPL. See LICENSE.txt.
+*/
+
+button {
+    background-color: var(--cw-button-background);
+    border: none;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    color: var(--cw-text);
+    cursor: pointer;
+}
+
+button:hover:not(.active):not(:active):not(:disabled) {
+    background-color: var(--cw-button-hover);
+}
+
+button.active:not(:disabled),
+button:active:not(:disabled) {
+    background-color: var(--cw-button-active);
+}
+
+button:disabled {
+    color: var(--cw-text-disabled);
+    background-color: var(--cw-button-disabled);
+    cursor: auto;
+}

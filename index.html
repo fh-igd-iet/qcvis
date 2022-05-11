@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="icon" href="/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>QCVIS</title>
+    <link rel="stylesheet" href="/node_modules/modern-css-reset/src/reset.css">
+    <style>
+        :root {
+            --cw-font: system-ui, -apple-system, "Segoe UI", Roboto,
+            "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif,
+            "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+            "Noto Color Emoji";
+            --cw-text: #efeffa;
+            --cw-text-disabled: #939393;
+            --cw-background: #363636;
+            --cw-background-shade: #2b2b2b;
+            --cw-sep: #000000;
+
+            --cw-logo-background: #292929;
+
+            --cw-button-background: var(--cw-background-shade);
+            --cw-button-hover: #191919;
+            --cw-button-active: var(--cw-button-hover);
+            --cw-button-disabled: var(--cw-logo-background);
+
+            --cw-checkbox-active: var(--cw-button-active);
+            --cw-checkbox-hover: var(--cw-button-disabled);
+
+            --cw-toolbar-button-background: var(--cw-background);
+            --cw-toolbar-button-hover: var(--cw-button-disabled);
+
+            --cw-editor-toolbar-background: #363636CC;
+            --cw-editor-breakpoint: var(--cw-background);
+            --cw-editor-breakpoint-hover: #505050;
+            --cw-editor-breakpoint-active: var(--cw-text-disabled);
+
+            --cw-visualisation-toolbar-background: var(--cw-editor-toolbar-background);
+            --cw-visualisation-toolbar-button-background: transparent;
+            --cw-visualisation-toolbar-button-hover: var(--cw-button-disabled);
+
+            --cw-modal-background: var(--cw-background);
+            --cw-modal-border: var(--cw-text);
+            --cw-modal-close-background: var(--cw-background-shade);
+
+            --cw-editor-hover: var(--cw-background);
+            --cw-editor-active: var(--cw-background);
+
+            --cw-editor-wire: var(--cw-text-disabled);
+        }
+
+        body {
+            min-height: 0;
+            font-family: var(--cw-font);
+            background-color: var(--cw-background);
+            color: var(--cw-text);
+            margin: 0;
+        }
+
+        .loading-spinner {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .page-loading-spinner {
+            position: absolute;
+            z-index: 1000;
+            height: 100vh;
+        }
+
+        .page-loading-spinner > div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem;
+            border-radius: 50%;
+            background-image: radial-gradient(
+                closest-side,
+                #363636,
+                rgba(0, 0, 0, 0)
+            );
+        }
+
+        .loading-spinner > div {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .loader-text {
+            font-size: 1.5rem;
+        }
+
+        .loader {
+            width: 128px;
+            height: 128px;
+            border-radius: 50%;
+            perspective: 800px;
+        }
+
+        .loader > .inner {
+            position: absolute;
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        .loader > .inner.one {
+            left: 0;
+            top: 0;
+            animation: rotate-one 2s linear infinite;
+            border-bottom: 5px solid var(--cw-text);
+        }
+
+        .loader > .inner.two {
+            right: 0;
+            top: 0;
+            animation: rotate-two 2s linear infinite;
+            border-right: 5px solid var(--cw-text);
+        }
+
+        .loader > .inner.three {
+            right: 0;
+            bottom: 0;
+            animation: rotate-three 2s linear infinite;
+            border-top: 5px solid var(--cw-text);
+        }
+
+        .loader-text {
+            margin-top: 2rem;
+        }
+
+        @keyframes rotate-one {
+            0% {
+                transform: rotateX(35deg) rotateY(-45deg) rotateZ(0deg);
+            }
+            100% {
+                transform: rotateX(35deg) rotateY(-45deg) rotateZ(360deg);
+            }
+        }
+
+        @keyframes rotate-two {
+            0% {
+                transform: rotateX(50deg) rotateY(10deg) rotateZ(0deg);
+            }
+            100% {
+                transform: rotateX(50deg) rotateY(10deg) rotateZ(360deg);
+            }
+        }
+
+        @keyframes rotate-three {
+            0% {
+                transform: rotateX(35deg) rotateY(55deg) rotateZ(0deg);
+            }
+            100% {
+                transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg);
+            }
+        }
+
+        .page-squares {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+        }
+
+        .page-squares > .squares {
+            height: 100%;
+            display: flex;
+            justify-content: space-around;
+            overflow: hidden;
+        }
+
+        .page-squares > .squares > .square {
+            -webkit-animation: squares 9.5s linear infinite;
+            animation: squares 9.5s linear infinite;
+            align-self: flex-end;
+            width: 1em;
+            height: 1em;
+            transform: translateY(100%);
+            background: var(--cw-background-shade);
+            -webkit-filter: blur(5px);
+            filter: blur(5px);
+        }
+
+        .page-squares > .squares > .square:nth-child(2) {
+            height: 1.5em;
+            width: 3em;
+            -webkit-animation-delay: 1s;
+            animation-delay: 1s;
+            -webkit-animation-duration: 17s;
+            animation-duration: 17s;
+            filter: blur(5px);
+            -webkit-filter: blur(5px);
+        }
+
+        .page-squares > .squares > .square:nth-child(3) {
+            height: 2em;
+            width: 1em;
+            -webkit-animation-delay: 1.5s;
+            animation-delay: 1.5s;
+            -webkit-animation-duration: 8s;
+            animation-duration: 8s;
+            -webkit-filter: blur(8px);
+            filter: blur(8px);
+        }
+
+        .page-squares > .squares > .square:nth-child(4) {
+            height: 1em;
+            width: 1.5em;
+            -webkit-animation-delay: 0.5s;
+            animation-delay: 0.5s;
+            -webkit-filter: blur(6px);
+            filter: blur(6px);
+            -webkit-animation-duration: 13s;
+            animation-duration: 13s;
+        }
+
+        .page-squares > .squares > .square:nth-child(5) {
+            height: 1.25em;
+            width: 2em;
+            -webkit-animation-delay: 4s;
+            animation-delay: 4s;
+            -webkit-filter: blur(7px);
+            filter: blur(7px);
+            -webkit-animation-duration: 11s;
+            animation-duration: 11s;
+        }
+
+        .page-squares > .squares > .square:nth-child(6) {
+            height: 2.5em;
+            width: 2em;
+            -webkit-animation-delay: 2s;
+            animation-delay: 2s;
+            -webkit-filter: blur(6px);
+            filter: blur(6px);
+            -webkit-animation-duration: 9s;
+            animation-duration: 9s;
+        }
+
+        .page-squares > .squares > .square:nth-child(7) {
+            height: 5em;
+            width: 2em;
+            -webkit-filter: blur(5px);
+            filter: blur(5px);
+            -webkit-animation-duration: 12s;
+            animation-duration: 12s;
+        }
+
+        .page-squares > .squares > .square:nth-child(8) {
+            height: 1em;
+            width: 3em;
+            -webkit-animation-delay: 5s;
+            animation-delay: 5s;
+            -webkit-filter: blur(6px);
+            filter: blur(6px);
+            -webkit-animation-duration: 18s;
+            animation-duration: 18s;
+        }
+
+        .page-squares > .squares > .square:nth-child(9) {
+            height: 1.5em;
+            width: 2em;
+            -webkit-filter: blur(8px);
+            filter: blur(8px);
+            -webkit-animation-duration: 9s;
+            animation-duration: 9s;
+        }
+
+        .page-squares > .squares > .square:nth-child(10) {
+            height: 3em;
+            width: 2.4em;
+            -webkit-animation-delay: 6s;
+            animation-delay: 6s;
+            -webkit-filter: blur(6px);
+            filter: blur(6px);
+            -webkit-animation-duration: 12s;
+            animation-duration: 12s;
+        }
+
+        @-webkit-keyframes squares {
+            from {
+                transform: translateY(100%) rotate(-50deg);
+            }
+            to {
+                transform: translateY(calc(-100vh + -100%)) rotate(20deg);
+            }
+        }
+
+        @keyframes squares {
+            from {
+                transform: translateY(100%) rotate(-50deg);
+            }
+            to {
+                transform: translateY(calc(-100vh + -100%)) rotate(20deg);
+            }
+        }
+
+        #app[data-v-app] > .loading-spinner {
+            display: none;
+        }
+
+        #app[data-v-app] > .page-squares {
+            display: none;
+        }
+    </style>
+    <link rel="stylesheet" href="/src/index.css">
+</head>
+<body>
+<div id="app">
+    <div class="page-squares">
+        <div class="squares">
+            <div class="square"></div>
+            <div class="square"></div>
+            <div class="square"></div>
+            <div class="square"></div>
+            <div class="square"></div>
+            <div class="square"></div>
+            <div class="square"></div>
+            <div class="square"></div>
+            <div class="square"></div>
+            <div class="square"></div>
+        </div>
+    </div>
+    <div class="page-loading-spinner loading-spinner">
+        <div>
+            <div class="loader">
+                <div class="inner one"></div>
+                <div class="inner two"></div>
+                <div class="inner three"></div>
+            </div>
+            <span class="loader-text">Loading...</span>
+        </div>
+    </div>
+</div>
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+// Copyright© 2022 Gesellschaft zur Förderung der angewandten Forschung e.V. acting on behalf of its Fraunhofer Institut für Graphische Datenverarbeitung.
+// Licensed under the EUPL. See LICENSE.txt.
+
+@import "./../variables";
+
+.gate {
+    min-width: $qe-gate-inner-size;
+    width: $qe-gate-inner-size;
+    min-height: $qe-gate-inner-size;
+    height: $qe-gate-inner-size;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(45deg, #d70058, #c04343);
+    box-shadow: 0 0 5px black;
+    border: 1px solid black;
+    border-radius: $qe-gate-border-radius;
+    cursor: move;
+
+    &.running {
+        cursor: auto;
+    }
+}
