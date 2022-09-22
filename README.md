@@ -38,6 +38,14 @@ yarn run build:tauri # optimized build with Tauri-wrapper
 QCVIS is provided here under the terms of the European Union Public Licence (EUPL) v. 1.2, see [`LICENSE.txt`](LICENSE.txt).
 For alternate, non-copyleft licensing terms, please contact <andre.stork@igd.fraunhofer.de>.
 
+### Logos
+
+We provide the included QCVIS logo under the [CC BY-ND 4.0 license](https://creativecommons.org/licenses/by-nd/4.0/) (attribution, no derivatives).
+
+![QCVIS Logo](src/assets/logo.svg)
+
+The included [Qiskit](src/components/modal/QiskitLogo.svg) and [Quil](src/components/modal/QuilLogo.svg) logos retain their original copyrights and potential trademarks and are used under nominative fair use in the context of exporting files in the respective formats.
+
 ## Contributing
 
 You must sign a Contribution License Agreement (CLA) granting Fraunhofer IGD sublicensable, perpetual, worldwide, non-exclusive, royalty-free, irrevocable copyright and patent licenses, before any non-trivial pull request will be merged.
