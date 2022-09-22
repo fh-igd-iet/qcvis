@@ -25,13 +25,15 @@ jobs:
         run: corepack enable
       - name: Install npm dependencies
         run: yarn install
+      - name: Install tauri dependencies
+        run: apt install build-essential libpython3-dev libdbus-1-dev
       - name: Build Tauri
         run: yarn run build:tauri
       - uses: actions/upload-artifact@v2
         name: Upload Artifacts
         with:
-          name: tauri
-          path: src-tauri/target/release/qcvis
+          name: tauri-ubuntu
+          path: src-tauri/target/release/bundle/linux/*
   build-windows:
     runs-on: windows-latest
     steps:
@@ -55,8 +57,8 @@ jobs:
       - uses: actions/upload-artifact@v2
         name: Upload Artifacts
         with:
-          name: tauri
-          path: src-tauri/target/release/qcvis.exe
+          name: tauri-windows
+          path: src-tauri/target/release/bundle/msi/*
   build-macos:
     runs-on: macos-latest
     steps:
@@ -80,5 +82,5 @@ jobs:
       - uses: actions/upload-artifact@v2
         name: Upload Artifacts
         with:
-          name: tauri
-          path: src-tauri/target/release/qcvis
+          name: tauri-macos
+          path: src-tauri/target/release/bundle/macos/*
