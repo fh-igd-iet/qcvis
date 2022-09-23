@@ -108,7 +108,7 @@ jobs:
         name: Upload Artifacts
         with:
           name: tauri-macos-dmg
-          path: src-tauri/target/release/bundle/macos/*.dmg
+          path: src-tauri/target/release/bundle/dmg/*.dmg
       - uses: actions/upload-artifact@v2
         name: Upload Artifacts
         with:
