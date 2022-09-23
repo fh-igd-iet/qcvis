@@ -123,6 +123,7 @@ jobs:
       - build-linux
       - build-windows
       - build-macos
+    if: github.ref == 'refs/heads/trunk'
     steps:
       - uses: actions/checkout@v2
         name: Clone
