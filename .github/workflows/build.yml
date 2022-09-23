@@ -109,3 +109,44 @@ jobs:
         with:
           name: tauri-macos
           path: src-tauri/target/release/bundle/macos/*
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@master
+        with:
+          name: tauri-web
+          path: ./dist/
+      - uses: actions/download-artifact@master
+        with:
+          name: tauri-linux
+          path: ./tauri-linux
+      - uses: actions/download-artifact@master
+        with:
+          name: tauri-debian
+          path: ./tauri-debian
+      - uses: actions/download-artifact@master
+        with:
+          name: tauri-windows
+          path: ./tauri-windows
+      - uses: actions/download-artifact@master
+        with:
+          name: tauri-macos
+          path: ./tauri-macos
+      - name: Compress Web
+        run: tar -cvzf web.tar.gz ./dist/*
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            LICENSE.txt
+            DEPENDENCIES.txt
+            README.md
+            web.tar.gz
+            tauri-linux/*
+            tauri-debian/*
+            tauri-windows/*
+            tauri-macos/*
+
