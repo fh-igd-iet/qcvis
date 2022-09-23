@@ -53,12 +53,12 @@ jobs:
         name: Upload Artifacts (appimage)
         with:
           name: tauri-linux
-          path: src-tauri/target/release/bundle/appimage/*
+          path: src-tauri/target/release/bundle/appimage/*.AppImage
       - uses: actions/upload-artifact@v3
         name: Upload Artifacts (deb)
         with:
           name: tauri-debian
-          path: src-tauri/target/release/bundle/deb/*
+          path: src-tauri/target/release/bundle/deb/*.deb
   build-windows:
     runs-on: windows-latest
     steps:
@@ -83,7 +83,7 @@ jobs:
         name: Upload Artifacts
         with:
           name: tauri-windows
-          path: src-tauri/target/release/bundle/msi/*
+          path: src-tauri/target/release/bundle/msi/*.msi
   build-macos:
     runs-on: macos-latest
     steps:
@@ -107,8 +107,13 @@ jobs:
       - uses: actions/upload-artifact@v2
         name: Upload Artifacts
         with:
-          name: tauri-macos
-          path: src-tauri/target/release/bundle/macos/*
+          name: tauri-macos-dmg
+          path: src-tauri/target/release/bundle/macos/*.dmg
+      - uses: actions/upload-artifact@v2
+        name: Upload Artifacts
+        with:
+          name: tauri-macos-app
+          path: src-tauri/target/release/bundle/macos/*.app
   release:
     runs-on: ubuntu-latest
     needs:
@@ -135,8 +140,12 @@ jobs:
           path: ./tauri-windows
       - uses: actions/download-artifact@master
         with:
-          name: tauri-macos
-          path: ./tauri-macos
+          name: tauri-macos-dmg
+          path: ./tauri-macos-dmg
+      - uses: actions/download-artifact@master
+        with:
+          name: tauri-macos-app
+          path: ./tauri-macos-app
       - name: Compress Web
         run: tar -cvzf web.tar.gz ./dist/*
       - uses: "marvinpinto/action-automatic-releases@latest"
@@ -153,5 +162,6 @@ jobs:
             tauri-linux/*
             tauri-debian/*
             tauri-windows/*
-            tauri-macos/*
+            tauri-macos-app/*
+            tauri-macos-dmg/*
 
