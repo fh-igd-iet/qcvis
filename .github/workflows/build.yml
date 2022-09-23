@@ -111,6 +111,11 @@ jobs:
           path: src-tauri/target/release/bundle/macos/*
   release:
     runs-on: ubuntu-latest
+    needs:
+      - build-web
+      - build-linux
+      - build-windows
+      - build-macos
     steps:
       - uses: actions/download-artifact@master
         with:
