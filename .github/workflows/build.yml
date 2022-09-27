@@ -8,18 +8,18 @@ env:
 
 jobs:
   build-web:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
         name: Clone
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
         name: Setup Node
         with:
-          node-version: "*"
+          node-version: 16
       - name: Install Yarn
         run: corepack enable
       - name: Install npm dependencies
-        run: yarn install
+        run: yarn install --immutable
       - name: Build
         run: yarn run build
       - uses: actions/upload-artifact@v3
@@ -27,8 +27,11 @@ jobs:
         with:
           name: tauri-web
           path: dist/*
-  build-linux:
-    runs-on: ubuntu-latest
+  build-tauri:
+    strategy:
+      matrix:
+        os: ["ubuntu-20.04", "windows-latest", "macos-latest"]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
         name: Clone
@@ -37,81 +40,56 @@ jobs:
         with:
           toolchain: stable
           override: true
-      - uses: actions/setup-node@v1
+          cache: yarn
+      - uses: actions/setup-node@v3
         name: Setup Node
         with:
-          node-version: "*"
-      - name: Install Yarn
-        run: corepack enable
+          node-version: 16
       - name: Install npm dependencies
-        run: yarn install
-      - name: Install tauri dependencies
-        run: sudo apt update && sudo apt install -y build-essential libpython3-dev libdbus-1-dev libgtk-3-dev libsoup-gnome2.4-dev libwebkit2gtk-4.0-dev
+        run: yarn install --immutable --prefer-offline
+      - if: matrix.os == 'ubuntu-20.04'
+        name: Install Build Packages
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: |
+            libpython3-dev
+            libdbus-1-dev
+            libgtk-3-dev
+            libsoup-gnome2.4-dev
+            libwebkit2gtk-4.0-dev
+          version: 1.0
+      - uses: Swatinem/rust-cache@v2
       - name: Build Tauri
         run: yarn run build:tauri
-      - uses: actions/upload-artifact@v3
+      - if: matrix.os == 'macos-latest'
+        name: Compress App
+        run: tar -cvzf qcvis.app.tar.gz ./src-tauri/target/release/bundle/macos/qcvis.app
+      - if: matrix.os == 'ubuntu-20.04'
+        uses: actions/upload-artifact@v3
         name: Upload Artifacts (appimage)
         with:
           name: tauri-linux
           path: src-tauri/target/release/bundle/appimage/*.AppImage
-      - uses: actions/upload-artifact@v3
+      - if: matrix.os == 'ubuntu-20.04'
+        uses: actions/upload-artifact@v3
         name: Upload Artifacts (deb)
         with:
           name: tauri-debian
           path: src-tauri/target/release/bundle/deb/*.deb
-  build-windows:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-        name: Clone
-      - uses: actions-rs/toolchain@v1
-        name: Setup Rust
-        with:
-          toolchain: stable
-          override: true
-      - uses: actions/setup-node@v1
-        name: Setup Node
-        with:
-          node-version: "*"
-      - name: Install Yarn
-        run: corepack enable
-      - name: Install npm dependencies
-        run: yarn install
-      - name: Build Tauri
-        run: yarn run build:tauri
-      - uses: actions/upload-artifact@v2
+      - if: matrix.os == 'windows-latest'
+        uses: actions/upload-artifact@v2
         name: Upload Artifacts
         with:
           name: tauri-windows
           path: src-tauri/target/release/bundle/msi/*.msi
-  build-macos:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v2
-        name: Clone
-      - uses: actions-rs/toolchain@v1
-        name: Setup Rust
-        with:
-          toolchain: stable
-          override: true
-      - uses: actions/setup-node@v1
-        name: Setup Node
-        with:
-          node-version: "*"
-      - name: Install Yarn
-        run: corepack enable
-      - name: Install npm dependencies
-        run: yarn install
-      - name: Build Tauri
-        run: yarn run build:tauri
-      - name: Compress App
-        run: tar -cvzf qcvis.app.tar.gz ./src-tauri/target/release/bundle/macos/qcvis.app
-      - uses: actions/upload-artifact@v2
+      - if: matrix.os == 'macos-latest'
+        uses: actions/upload-artifact@v2
         name: Upload Artifacts
         with:
           name: tauri-macos-dmg
           path: src-tauri/target/release/bundle/dmg/*.dmg
-      - uses: actions/upload-artifact@v2
+      - if: matrix.os == 'macos-latest'
+        uses: actions/upload-artifact@v2
         name: Upload Artifacts
         with:
           name: tauri-macos-app
@@ -120,9 +98,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - build-web
-      - build-linux
-      - build-windows
-      - build-macos
+      - build-tauri
     if: github.ref == 'refs/heads/trunk'
     steps:
       - uses: actions/checkout@v2
