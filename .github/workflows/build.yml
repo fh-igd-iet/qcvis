@@ -20,7 +20,7 @@ jobs:
       - name: Install Yarn
         run: corepack enable
       - name: Install npm dependencies
-        run: yarn install --immutable --cached
+        run: yarn install --immutable --check-cache
       - name: Build
         run: yarn run build
       - uses: actions/upload-artifact@v3
@@ -47,7 +47,7 @@ jobs:
           node-version: 16
           cache: yarn
       - name: Install npm dependencies
-        run: yarn install --immutable --cached
+        run: yarn install --immutable --check-cache
       - if: matrix.os == 'ubuntu-20.04'
         name: Install Build Packages
         uses: awalsh128/cache-apt-pkgs-action@latest
