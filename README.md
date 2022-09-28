@@ -57,4 +57,4 @@ Please contact <andre.stork@igd.fraunhofer.de> for details.
 ## Third-party Dependencies and Attribution
 
 A list of third-party dependencies and their licenses / attribution notices is provided in [`DEPENDENCIES.txt`](DEPENDENCIES.txt).
-The Tauri desktop application wrapper has additional dependencies documented in [`src-tauri/DEPENDENCIES.html`](src-tauri/DEPENDENCIES.html).
+The Tauri desktop application wrapper has additional dependencies documented in [`src-tauri/DEPENDENCIES.txt`](src-tauri/DEPENDENCIES.txt).
