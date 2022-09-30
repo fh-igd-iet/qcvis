@@ -9,7 +9,6 @@ import ExportModal from "@/components/modal/ExportModal.vue";
 import ImportModal from "@/components/modal/ImportModal.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {
-    faFlask,
     faPlay,
     faForward,
     faRecycle,
@@ -18,7 +17,14 @@ import {
     faGlobeEurope,
     faBars,
     faPause,
+    faFileLines,
 } from "@fortawesome/free-solid-svg-icons";
+
+import QCVISLogo from "../assets/logo.svg?url";
+
+import license from "../../LICENSE.txt?raw";
+import notices_web from "../../DEPENDENCIES.txt?url";
+import notices_tauri from "../../src-tauri/DEPENDENCIES.txt?url";
 
 defineProps<{
     running: boolean;
@@ -37,6 +43,7 @@ const emit = defineEmits<{
 const open = ref(false);
 const exportModalShow = ref(false);
 const importModalShow = ref(false);
+const showLicense = ref(false);
 
 async function save() {
     const { GlobalQuantumCircuit } = await import(
@@ -59,19 +66,42 @@ async function save() {
         window.URL.revokeObjectURL(url);
     }
 }
+
+let noticesLoaded = false;
+async function loadNotices() {
+    if (noticesLoaded) return;
+    noticesLoaded = true;
+
+    const web_res = await fetch(notices_web);
+    const web_text = await web_res.text();
+
+    const pre = document.getElementById("notices");
+    if (pre === null) return;
+    pre.textContent = web_text;
+
+    if ("__TAURI__" in window) {
+        const tauri_res = await fetch(notices_tauri);
+        const tauri_text = await tauri_res.text();
+        pre.textContent += "-----\n\n";
+        pre.textContent += tauri_text;
+    }
+}
 </script>
 
 <template>
     <nav class="navbar">
         <div class="navbar-head">
             <div class="logo">
-                <FontAwesomeIcon :icon="faFlask" />
+                <img :src="QCVISLogo" alt="QCVIS logo" />
             </div>
 
             <button
                 class="toggle"
                 :class="{ active: open }"
-                @click="open = !open"
+                @click="
+                    open = !open;
+                    showLicense = false;
+                "
             >
                 <FontAwesomeIcon :icon="faBars" />
             </button>
@@ -118,8 +148,38 @@ async function save() {
                 <FontAwesomeIcon :icon="faGlobeEurope" />
                 <span>Export</span>
             </button>
+
+            <button
+                class="item"
+                @click="showLicense = !showLicense"
+                id="license-symbol"
+            >
+                <FontAwesomeIcon :icon="faFileLines" />
+                <span>License &amp; Notices</span>
+            </button>
         </div>
     </nav>
+
+    <div id="licenseModal" v-show="showLicense">
+        <div id="lcontainer">
+            <div>
+                <p>
+                    Copyright© 2022 Gesellschaft zur Förderung der angewandten
+                    Forschung e.V. acting on behalf of its Fraunhofer Institut
+                    für Graphische Datenverarbeitung. Licensed under the EUPL.
+                </p>
+                <details open>
+                    <summary>License</summary>
+                    <pre>{{ license }}</pre>
+                </details>
+                <details :ontoggle="loadNotices">
+                    <!-- prettier-ignore -->
+                    <summary>Third-party Licenses and Attribution Notices</summary>
+                    <pre id="notices"></pre>
+                </details>
+            </div>
+        </div>
+    </div>
 
     <ExportModal
         v-if="exportModalShow"
@@ -148,16 +208,19 @@ async function save() {
     padding: 0.25rem;
     z-index: 99;
 }
+
 @media (min-width: 640px) {
     .navbar {
         flex-direction: row;
     }
 }
+
 .navbar-head {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
+
     > button,
     > div {
         margin: 0.5rem;
@@ -172,32 +235,44 @@ async function save() {
         background-color: var(--cw-logo-background);
         border-radius: 12px;
     }
+
     > .toggle {
         &:not(:hover):not(:active):not(.active):not(:disabled) {
             background-color: var(--cw-toolbar-button-background) !important;
         }
+
         &:hover:not(:active):not(.active):not(:disabled) {
             background-color: var(--cw-toolbar-button-hover) !important;
         }
     }
 }
+
+.logo > img {
+    width: 42px;
+    height: auto;
+}
+
 @media (min-width: 640px) {
     .navbar-head {
         flex-direction: column;
         width: auto;
+
         > .toggle {
             display: none;
         }
     }
 }
+
 .spacer {
     width: 0;
 }
+
 @media (min-width: 640px) {
     .spacer {
         width: 15px;
     }
 }
+
 .navbar-items {
     display: none;
     width: 100%;
@@ -227,11 +302,13 @@ async function save() {
             font-size: 13px;
             margin-top: 7px;
         }
+
         > svg {
             width: 3rem;
         }
     }
 }
+
 @media (min-width: 640px) {
     .navbar-items {
         width: auto;
@@ -247,5 +324,37 @@ async function save() {
 
 .navbar-items.show {
     display: flex;
+}
+
+#license-symbol {
+    position: absolute;
+    right: 20px;
+}
+
+#licenseModal {
+    display: block;
+    position: absolute;
+    width: 100%;
+    min-height: calc(100% - 70px);
+    z-index: 999;
+    background: #333;
+    padding: 10px;
+}
+
+#licenseModal #lcontainer {
+    overflow-y: auto;
+}
+
+#licenseModal #lcontainer div {
+    position: relative;
+    display: block;
+
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+#licenseModal #lcontainer * > pre {
+    word-wrap: break-word;
+    white-space: pre-wrap;
 }
 </style>
