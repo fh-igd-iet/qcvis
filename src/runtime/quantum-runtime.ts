@@ -37,7 +37,7 @@ export class QuantumRuntime {
         } else {
             await init(
                 new URL(
-                    "/node_modules/qukit/pkg.web/pkg/qukit_bg.wasm",
+                    "../../node_modules/qukit/pkg.web/pkg/qukit_bg.wasm",
                     import.meta.url
                 )
             );

@@ -7,8 +7,8 @@
 
 .content {
     flex-grow: 1;
-    width: 100%;
-    height: 800px;
+    max-width: 100%;
+    /*height: 800px; this made documents height bigger than necessary*/
     display: flex;
     justify-content: center;
 }
