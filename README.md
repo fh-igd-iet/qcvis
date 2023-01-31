@@ -1,5 +1,10 @@
 # QCVIS — Interactive Visualization of Quantum Algorithms
 
+[![License: EUPL-1.2](https://img.shields.io/github/license/fh-igd-iet/qcvis?color=blue&label=License)](LICENSE.txt)
+[![Try it out](https://img.shields.io/badge/-Try%20it%20out%20→-brightgreen)](https://fh-igd-iet.github.io/qcvis/)
+
+[![QCVIS in action](.github/assets/readme_screenshot.png "QCVIS in action")](https://fh-igd-iet.github.io/qcvis/)
+
 QCVIS is a web application for interactive visualization of quantum algorithms, with the goal of improving understanding of quantum algorithms when getting started with quantum computing.
 Four different visualizations are provided at this time:
 
