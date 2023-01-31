@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -49,18 +49,18 @@ jobs:
         if: success() || failure()
         run: |
           yarn run lint
-          (exit `git status --porcelain=v1 2>/dev/null | wc -l)
+          (exit `git status --porcelain=v1 2>/dev/null | wc -l`)
       - name: Check Clippy lints (Debug)
         if: success() || failure()
         working-directory: src-tauri
-        run: cargo clippy --no-deps --locked -- --deny warning --deny clippy::all
+        run: cargo clippy --no-deps --locked -- --deny warnings --deny clippy::all
       - name: Check Clippy lints (Release)
         if: success() || failure()
         working-directory: src-tauri
-        run: cargo clippy --no-deps --locked --release -- --deny warning --deny clippy::all
+        run: cargo clippy --no-deps --locked --release -- --deny warnings --deny clippy::all
       - name: Check third-party licenses
         if: success() || failure()
         run: |
           git restore .
           ./update_dependencies.sh
-          (exit `git status --porcelain=v1 2>/dev/null | wc -l)
+          (exit `git status --porcelain=v1 2>/dev/null | wc -l`)
