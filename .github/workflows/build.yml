@@ -21,7 +21,7 @@ jobs:
           components: clippy
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
-        workspaces: src-tauri
+        working-directory: src-tauri
       - name: Install cargo-about
         uses: baptiste0928/cargo-install@v1
         with:
