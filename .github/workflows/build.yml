@@ -83,7 +83,7 @@ jobs:
       - name: Install Yarn dependencies
         run: yarn install --immutable --check-cache
       - name: Build
-        run: yarn run build
+        run: yarn run build -- --locked
       - uses: actions/upload-artifact@v3
         name: Upload Artifacts
         with:
@@ -121,7 +121,7 @@ jobs:
           packages: libpython3-dev libdbus-1-dev libgtk-3-dev libsoup-gnome2.4-dev libwebkit2gtk-4.0-dev
           version: 1.0
       - name: Build Tauri
-        run: yarn run build:tauri
+        run: yarn run build:tauri -- --locked
       - if: matrix.os == 'macos-12'
         name: Compress App
         run: tar cvzf qcvis.app.tar.gz ./src-tauri/target/release/bundle/macos/qcvis.app
