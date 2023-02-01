@@ -1,5 +1,6 @@
 # QCVIS — Interactive Visualization of Quantum Algorithms
 
+[![Build](https://github.com/fh-igd-iet/qcvis/actions/workflows/build.yml/badge.svg)](https://github.com/fh-igd-iet/qcvis/actions/workflows/build.yml)
 [![License: EUPL-1.2](https://img.shields.io/github/license/fh-igd-iet/qcvis?color=blue&label=License)](LICENSE.txt)
 [![Try it out](https://img.shields.io/badge/-Try%20it%20out%20→-brightgreen)](https://fh-igd-iet.github.io/qcvis/)
 
