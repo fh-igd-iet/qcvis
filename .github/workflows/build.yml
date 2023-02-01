@@ -72,6 +72,8 @@ jobs:
           (exit `git status --porcelain=v1 2>/dev/null | wc -l`)
   build-web:
     runs-on: ubuntu-20.04
+    needs:
+      - check-lints
     steps:
       - uses: actions/checkout@v3
         name: Clone
@@ -96,6 +98,8 @@ jobs:
       matrix:
         os: ["ubuntu-20.04", "windows-2022", "macos-12"]
     runs-on: ${{ matrix.os }}
+    needs:
+      - check-lints
     steps:
       - uses: actions/checkout@v3
         name: Clone
