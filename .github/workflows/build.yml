@@ -52,14 +52,14 @@ jobs:
         if: success() || failure()
         working-directory: src-tauri
         run: |
-          mkdir ../dist
+          mkdir -p ../dist
           cargo clippy --no-deps --locked -- --deny warnings --deny clippy::all
           rmdir ../dist
       - name: Check Clippy lints (Release)
         if: success() || failure()
         working-directory: src-tauri
         run: |
-          mkdir ../dist
+          mkdir -p ../dist
           cargo clippy --no-deps --locked --release -- --deny warnings --deny clippy::all
           rmdir ../dist
       - name: Check third-party licenses
