@@ -34,7 +34,7 @@ jobs:
       - name: Enable corepack
         run: corepack enable
       - name: Install Yarn dependencies
-        run: yarn install --immutable --check-cache
+        run: yarn install --immutable
       - name: Install apt packages
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
@@ -81,7 +81,7 @@ jobs:
           node-version: "lts/hydrogen"
           cache: yarn
       - name: Install Yarn dependencies
-        run: yarn install --immutable --check-cache
+        run: yarn install --immutable
       - name: Build
         run: yarn run build -- --locked
       - name: Compress dist directory
@@ -113,7 +113,7 @@ jobs:
           node-version: "lts/hydrogen"
           cache: yarn
       - name: Install Yarn dependencies
-        run: yarn install --immutable --check-cache
+        run: yarn install --immutable
       - name: Install apt Packages
         if: matrix.os == 'ubuntu-20.04'
         uses: awalsh128/cache-apt-pkgs-action@latest
