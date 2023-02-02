@@ -130,7 +130,7 @@ jobs:
         with:
           name: qcvis-tauri-${{ matrix.os }}
           path: |
-            src-tauri/target/release/bundle/appimage/*.AppImage
+            src-tauri/target/release/bundle/appimage/qcvis*.AppImage
             src-tauri/target/release/bundle/deb/*.deb
             src-tauri/target/release/bundle/msi/*.msi
             src-tauri/target/release/bundle/dmg/*.dmg
