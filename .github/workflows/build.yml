@@ -34,8 +34,6 @@ jobs:
         with:
           node-version: lts/hydrogen
           cache: yarn
-      - name: Enable corepack
-        run: corepack enable
       - name: Install Yarn dependencies
         run: yarn install --immutable
       - name: Install apt packages
