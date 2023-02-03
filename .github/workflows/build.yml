@@ -153,6 +153,8 @@ jobs:
         uses: BaileyJM02/markdown-to-pdf@v1
         with:
           input_path: README.md
+          build_html: false
+      - run: ls -l
       - name: Tag release
         uses: marvinpinto/action-automatic-releases@latest
         with:
