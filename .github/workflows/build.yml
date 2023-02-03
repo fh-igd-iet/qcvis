@@ -154,6 +154,7 @@ jobs:
         with:
           input_path: README.md
           images_dir: ./
+          image_import: ""
           build_html: false
       - name: Tag release
         uses: marvinpinto/action-automatic-releases@latest
