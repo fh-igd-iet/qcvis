@@ -27,7 +27,7 @@ jobs:
         uses: baptiste0928/cargo-install@v1
         with:
           crate: cargo-about
-          version: "=0.5.4"
+          version: =0.5.4
           args: --locked
       - name: Setup Node
         uses: actions/setup-node@v3
@@ -81,7 +81,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: "lts/hydrogen"
+          node-version: lts/hydrogen
           cache: yarn
       - name: Install Yarn dependencies
         run: yarn install --immutable
@@ -97,7 +97,7 @@ jobs:
   build-tauri:
     strategy:
       matrix:
-        os: ["ubuntu-20.04", "windows-2022", "macos-12"]
+        os: [ubuntu-20.04, windows-2022, macos-12]
     runs-on: ${{ matrix.os }}
     needs:
       - check-lints
@@ -113,7 +113,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: "lts/hydrogen"
+          node-version: lts/hydrogen
           cache: yarn
       - name: Install Yarn dependencies
         run: yarn install --immutable
@@ -151,17 +151,18 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           path: artifacts
-      - name: List downloaded artifacts
-        run: ls -R artifacts
-      - name: Tag release
-        uses: "marvinpinto/action-automatic-releases@latest"
+      - name: Render Markdown
+        uses: BaileyJM02/markdown-to-pdf@v1.2.0
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
+          input_path: README.md
+      - name: Tag release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: latest
           prerelease: true
-          title: "Development build"
+          title: Development build
           files: |
             LICENSE.txt
-            DEPENDENCIES.txt
-            README.md
+            README.pdf
             artifacts/qcvis-*/**/*
