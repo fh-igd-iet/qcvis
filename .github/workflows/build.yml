@@ -150,12 +150,9 @@ jobs:
         with:
           path: artifacts
       - name: Render Markdown
-        uses: BaileyJM02/markdown-to-pdf@v1
+        uses: docker://pandoc/latex:2.9
         with:
-          input_path: README.md
-          images_dir: ./
-          image_import: ./
-          build_html: false
+          args: -o README.pdf README.md
       - name: Tag release
         uses: marvinpinto/action-automatic-releases@latest
         with:
@@ -165,5 +162,5 @@ jobs:
           title: Development build
           files: |
             LICENSE.txt
-            built/README.pdf
+            README.pdf
             artifacts/qcvis-*/**/*
