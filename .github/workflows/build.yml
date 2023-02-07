@@ -157,7 +157,9 @@ jobs:
       - name: Install md-to-pdf
         run: npm install -g md-to-pdf
       - name: Render Markdown
-        run: md-to-pdf README.md
+        run: md-to-pdf --port 2525 README.md
+      - name: Fix links
+        run: sed -i 's/http:\/\/localhost:2525/https:\/\/github.com\/fh-igd-iet\/qcvis\/blob\/trunk/g'
       - name: Tag release
         uses: marvinpinto/action-automatic-releases@latest
         with:
