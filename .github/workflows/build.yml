@@ -159,7 +159,7 @@ jobs:
       - name: Render Markdown
         run: md-to-pdf --port 2525 README.md
       - name: Fix links
-        run: sed -i 's/http:\/\/localhost:2525/https:\/\/github.com\/fh-igd-iet\/qcvis\/blob\/trunk/g'
+        run: sed -i 's/http:\/\/localhost:2525/https:\/\/github.com\/fh-igd-iet\/qcvis\/blob\/trunk/g' README.pdf
       - name: Tag release
         uses: marvinpinto/action-automatic-releases@latest
         with:
