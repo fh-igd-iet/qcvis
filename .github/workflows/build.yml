@@ -27,19 +27,17 @@ jobs:
         uses: baptiste0928/cargo-install@v1
         with:
           crate: cargo-about
-          version: "=0.5.4"
+          version: =0.5.4
           args: --locked
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: lts/hydrogen
           cache: yarn
-      - name: Enable corepack
-        run: corepack enable
       - name: Install Yarn dependencies
         run: yarn install --immutable
       - name: Install apt packages
-        uses: awalsh128/cache-apt-pkgs-action@latest
+        uses: awalsh128/cache-apt-pkgs-action@v1
         with:
           packages: libpython3-dev libdbus-1-dev libgtk-3-dev libsoup-gnome2.4-dev libwebkit2gtk-4.0-dev
           version: 1.0
@@ -81,7 +79,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: "lts/hydrogen"
+          node-version: lts/hydrogen
           cache: yarn
       - name: Install Yarn dependencies
         run: yarn install --immutable
@@ -97,7 +95,7 @@ jobs:
   build-tauri:
     strategy:
       matrix:
-        os: ["ubuntu-20.04", "windows-2022", "macos-12"]
+        os: [ubuntu-20.04, windows-2022, macos-12]
     runs-on: ${{ matrix.os }}
     needs:
       - check-lints
@@ -113,13 +111,13 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: "lts/hydrogen"
+          node-version: lts/hydrogen
           cache: yarn
       - name: Install Yarn dependencies
         run: yarn install --immutable
       - name: Install apt Packages
         if: matrix.os == 'ubuntu-20.04'
-        uses: awalsh128/cache-apt-pkgs-action@latest
+        uses: awalsh128/cache-apt-pkgs-action@v1
         with:
           packages: libpython3-dev libdbus-1-dev libgtk-3-dev libsoup-gnome2.4-dev libwebkit2gtk-4.0-dev
           version: 1.0
@@ -151,17 +149,25 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           path: artifacts
-      - name: List downloaded artifacts
-        run: ls -R artifacts
-      - name: Tag release
-        uses: "marvinpinto/action-automatic-releases@latest"
+      - name: Setup Node
+        uses: actions/setup-node@v3
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
+          node-version: lts/hydrogen
+          cache: npm
+      - name: Install md-to-pdf
+        run: npm install -g md-to-pdf
+      - name: Render Markdown
+        run: md-to-pdf --port 2525 README.md
+      - name: Fix links
+        run: sed -i 's/http:\/\/localhost:2525/https:\/\/github.com\/fh-igd-iet\/qcvis\/blob\/trunk/g' README.pdf
+      - name: Tag release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: latest
           prerelease: true
-          title: "Development build"
+          title: Development build
           files: |
             LICENSE.txt
-            DEPENDENCIES.txt
-            README.md
+            README.pdf
             artifacts/qcvis-*/**/*
