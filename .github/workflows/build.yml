@@ -149,16 +149,15 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           path: artifacts
-      - name: Render Markdown
-        uses: docker://pandoc/latex:2.9
+      - name: Setup Node
+        uses: actions/setup-node@v3
         with:
-          args: >-
-            -f gfm
-            -t html5
-            --metadata pagetitle="QCVis Readme"
-            --css github.css
-            -o README.pdf
-            README.md
+          node-version: lts/hydrogen
+          cache: npm
+      - name: Install md-to-pdf
+        run: npm install -g md-to-pdf
+      - name: Render Markdown
+        run: md-to-pdf README.md
       - name: Tag release
         uses: marvinpinto/action-automatic-releases@latest
         with:
